@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Juego de la Ruleta / OXXO</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        
+            <h1 class="text-center">Listado de Jugadores</h1>
+
+            <div class="row">
+            <table class="table table-striped" id="table1" >
+                <thead>
+                    <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Edad</th>
+                    <th scope="col">Correo</th>
+                    <th scope="col">Premio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </body>
+            </table>
+        </div>
+    </div>
+
+
+
+    <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase.js"></script>
+    <script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyDl3WdA2LIUdIjpZ6CcOUaHDBRJWTGub6k",
+        authDomain: "ruleta-ab71d.firebaseapp.com",
+        databaseURL: "https://ruleta-ab71d.firebaseio.com",
+        projectId: "ruleta-ab71d",
+        storageBucket: "ruleta-ab71d.appspot.com",
+        messagingSenderId: "814729653345"
+    };
+    firebase.initializeApp(config);
+
+    
+    const dbRef = firebase.database().ref();
+    const usersRef = dbRef.child('jugadores').orderByChild('nombre');
+
+    var table = document.querySelector('#table1 tbody');
+
+    function refreshData()
+    {
+        while(table.hasChildNodes()) {
+            table.removeChild(table.firstChild);
+        }
+        usersRef.on('value', snap => {
+            data = snap.val();
+            j = 0;
+            for(var r in data) {
+                j++;
+                var row = table.insertRow(-1);
+                for(var c in data[r]) {
+                    cell = row.insertCell(-1);
+                    switch(c){
+                        case "correo": cell.innerHTML = j; break;
+                        case "edad": cell.innerHTML = data[r].nombre;   break;
+                        case "nombre": cell.innerHTML = data[r].edad; break;
+                        case "premio": cell.innerHTML = data[r].correo; break;
+                        case "timestamp": cell.innerHTML = data[r].premio; break;
+                    };
+                }
+            }
+        });
+    }
+    refreshData();
+
+    
+    </script>
+</body>
+</html>
